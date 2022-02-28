@@ -1,8 +1,7 @@
-import "bulma/css/bulma.css"
 import styled from "styled-components"
 
 import { GlobalStyle } from './globalStyles';
-import { EventForm } from "./components/EventForm/EventForm";
+import { Generator } from "./components/Generator";
 
 import SecretSanta from './images/secret-santa.png'
 
@@ -18,34 +17,21 @@ const Header = styled.header`
   margin-bottom: 2.5rem;
   color: #fff;
 
-  .title {
-    color: #fff;
-  }
-
   img {
     width: 60%;
     @media screen and (min-width: 960px) {
-      width: 30%;
+      width: 25%;
     }
   }
 
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
   p {
-    margin-top: -1rem;
+    font-size: .95rem;
   }
-`
-const Subtitle = styled.h2`
-  color: #fff;
-  font-weight: 700;
-
-  &.subtitle {
-    margin-bottom: 2rem;
-  }
-
-  @media screen and (min-width: 960px) {
-    width: 60%;
-    margin: 0 auto;
-  }
-}
 `
 
 export const App = () => {
@@ -53,16 +39,14 @@ export const App = () => {
     <>
     <GlobalStyle/>
     
-    <Container className="container">
+    <Container>
       <Header>
         <img src={SecretSanta} alt="Secret Santa" />
-        <h1 className="title">It's time for Secret Santa !</h1>
-        <p className="content">Try out the Secret Santa name generator</p>
+        <h1>It's time for Secret Santa !</h1>
+        <p>Type your name and find out to whom you have to offer a gift</p> 
       </Header>
 
-      <Subtitle className="subtitle">Step 1 - Create your event</Subtitle>
-
-      <EventForm/>
+      <Generator/>
     </Container>
     </>
   );
