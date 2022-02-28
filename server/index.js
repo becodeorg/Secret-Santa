@@ -1,10 +1,13 @@
 const express = require('express')
 const cors = require('cors')
+const { Client } = require('pg')
+require('dotenv').config()
+
 const mail = require('./routes/mail')
 const attendee = require('./routes/attendee')
 
 const app = express()
-const port = process.env.PORT | 9000
+const PORT = 9000
 
 // Midlewares
 app.use(cors())
@@ -16,7 +19,6 @@ app.get("/", (req, res) => res.send({ info: "Welcome!" }));
 app.use("/api/mail", mail)
 app.use("/api/attendee", attendee)
 
-
-app.listen(port, () => {
-    console.log(`Connected on http://localhost:${port}/`)
+app.listen(PORT, () => {
+    console.log(`Connected on http://localhost:${PORT}/`)
 })

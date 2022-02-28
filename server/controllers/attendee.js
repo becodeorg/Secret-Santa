@@ -1,15 +1,19 @@
 const pool = require('../config/db')
+const { Client } = require('pg')
 
 
 // Add attendee to an event
 async function insertAttendee(req, res) {
-    const { name, firstname, email } = req.body
+    const { lastname, firstname, email } = req.body
 
     try {
-        const insert = await pool.query(
-            'INSERT INTO attendees (name, firstname, email, hasDraw, receiver, hasBeenDraw) VALUES ($1, $2, $3, $4, $5, $6)', [name, firstname, email, false, "", false]
-        );
-        res.status(200).send(insert)
+        const client = new Client()
+        await client.connect()
+        const data = await client.query(
+            'INSERT INTO public."secret-santa" ("firstname", "lastname", "email", "hasDraw", "receiver", "hasBeenDraw") VALUES ($1, $2, $3, $4, $5, $6)', [lastname, firstname, email, false, "", false]
+        )
+        res.send(data.rows);
+        await client.end()
     }
     catch (err) {
         console.log(err);
@@ -20,10 +24,13 @@ async function insertAttendee(req, res) {
 // Get all atttendees for an event
 async function getEvent(req, res) {
     try {
-        const event = await pool.query(
-            'SELECT * FROM attendees'
-        );
-        res.status(200).send(event.rows)
+        const client = new Client()
+        await client.connect()
+        const data = await client.query(
+            'SELECT * from public."secret-santa";'
+        )
+        res.send(data.rows);
+        await client.end()
     }
     catch (err) {
         console.log(err);
@@ -33,12 +40,16 @@ async function getEvent(req, res) {
 
 // Get receiver
 async function getReceiver(req, res) {
-    const { name, firstname } = req.body
+    const { lastname, firstname } = req.body
     try {
-        const event = await pool.query(
-            'SELECT * FROM attendees WHERE NOT (name=($1) AND firstname=($2)) AND hasBeenDraw=false', [name, firstname]
-        );
-        res.status(200).send(event.rows)
+        const client = new Client()
+        await client.connect()
+        console.log(req);
+        const data = await client.query(
+            'SELECT * from public."secret-santa" WHERE NOT ("lastname"=($1) AND "firstname"=($2)) AND "hasBeenDraw"=false;', [lastname, firstname]
+        )
+        res.send(data.rows);
+        await client.end()
     }
     catch (err) {
         console.log(err);
@@ -48,16 +59,20 @@ async function getReceiver(req, res) {
 
 // Update receiver/user info
 async function updateInfo(req, res) {
-    console.log(req.body);
     const receiver = req.body.data.receiver
     const user = req.body.data.user
 
     try {
-        const updateReceiver = await pool.query(
-            'UPDATE attendees SET hasBeenDraw=true WHERE id=($1)', [receiver.id]
-        );
+        const client = new Client()
+        await client.connect()
+        const data = await client.query(
+            'UPDATE public."secret-santa" SET "hasBeenDraw"=true WHERE "id"=($1);', [receiver.id],
+            'UPDATE public."secret-santa" SET "hasDraw"=true WHERE ("name"=($1) AND "firstname"=($2))', [user.lastname, user.firstname]
+        )
+        res.send(data.rows);
+        await client.end()
         const updateUser = await pool.query(
-            'UPDATE attendees SET hasDraw=true WHERE (name=($1) AND firstname=($2))', [user.name, user.firstname]
+
         );
     }
     catch (err) {

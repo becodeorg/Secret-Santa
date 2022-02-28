@@ -1,4 +1,4 @@
-const dotenv = require('dotenv').config();
+require('dotenv').config();
 const sgMail = require('@sendgrid/mail')
 const pool = require('../config/db')
 
@@ -10,14 +10,18 @@ async function sendMail(req, res) {
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
         // find user email
-        const user = await pool.query(
-            'SELECT * FROM attendees WHERE (name=$1 AND firstname=$2);', [to.name, to.firstname]
-        );
+        const client = new Client()
+        await client.connect()
+        const data = await client.query(
+            'SELECT * FROM public."secret-santa" WHERE ("lastname"=$1 AND "firstname"=$2);', [to.name, to.firstname]
+        )
+        res.send(data.rows);
+        await client.end()
 
         // Email
         const msg = {
-            to: user.rows[0].email,
-            cc: 'dylanrichardson1606@gmail.com',
+            to: data.rows[0].email,
+            cc: 'eric@becode.org',
             from: 'secretsanta.becode@gmail.com',
             subject: 'Secret Santa',
             text: text
