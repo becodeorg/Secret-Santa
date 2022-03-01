@@ -44,9 +44,8 @@ async function getReceiver(req, res) {
     try {
         const client = new Client()
         await client.connect()
-        console.log(req);
         const data = await client.query(
-            'SELECT * from public."secret-santa" WHERE NOT ("lastname"=($1) AND "firstname"=($2)) AND "hasBeenDraw"=false;', [lastname, firstname]
+            'SELECT * from public."secret-santa" WHERE NOT ("lastname"=($1) AND "firstname"=($2)) AND "hasBeenDraw"=false;', [lastname, firstname],
         )
         res.send(data.rows);
         await client.end()
