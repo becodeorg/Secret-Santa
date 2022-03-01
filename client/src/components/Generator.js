@@ -136,7 +136,7 @@ export const Generator = () => {
           axios.put("http://localhost:9000/api/attendee", {data: {receiver: receiver, user: name}})
             .then(res => console.log(res))
             .catch(err => console.log(err))
-          axios.post("http://localhost:9000/api/mail", {to: receiver.email, text: `You have draw ${receiver.firstname + " " + receiver.name}`})
+          axios.post("http://localhost:9000/api/mail", {to: receiver.email, text: `You have draw ${receiver.firstname + " " + receiver.lastname}`})
             .then(res => console.log(res))
             .catch(err => console.log(err))
     })
