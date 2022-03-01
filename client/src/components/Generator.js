@@ -128,13 +128,13 @@ export const Generator = () => {
   const getReceiver =  e => {
     e.preventDefault()
 
-    axios.post("http://localhost:9000/api/attendee/receiver", name)
+    axios.post("http://santa-api.becode.org/api/attendee/receiver", name)
       .then(res => {
         setReceiver(res.data[getRandomInt(res.data.length)])
-          axios.put("http://localhost:9000/api/attendee", {data: {receiver: receiver, user: name}})
+          axios.put("http://santa-api.becode.org/api/attendee", {data: {receiver: receiver, user: name}})
             .then(res => console.log(res))
             .catch(err => console.log(err))
-          axios.post("http://localhost:9000/api/mail", {to: receiver.email, text: `You have draw ${receiver.firstname + " " + receiver.lastname}`})
+          axios.post("http://santa-api.becode.org/api/mail", {to: receiver.email, text: `You have draw ${receiver.firstname + " " + receiver.lastname}`})
             .then(res => console.log(res))
             .catch(err => console.log(err))
     })
