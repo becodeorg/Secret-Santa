@@ -1,0 +1,43 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  postgres:
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    volumes:
+      - ./docker/postgres/database.sql:/docker-entrypoint-initdb.d/database.sql
+      - ./postgresql/data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGDATABASE: postgres
+      PGPASSWORD: azerty123
+      PGPORT: 5432
+    volumes:
+      - ./server/config:/app/config
+      - ./server/src:/app/src
+      - ./server/test:/app/test
+    ports:
+      - "9000:9000"
+
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/app
+    ports:
+      - "8080:3000"
+
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 7000:8080

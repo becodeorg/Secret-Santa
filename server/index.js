@@ -1,6 +1,5 @@
 const express = require('express')
 const cors = require('cors')
-const { Client } = require('pg')
 require('dotenv').config()
 
 const mail = require('./routes/mail')

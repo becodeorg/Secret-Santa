@@ -1,6 +1,6 @@
 require('dotenv').config();
 const sgMail = require('@sendgrid/mail')
-const pool = require('../config/db')
+const { Client } = require('pg')
 
 async function sendMail(req, res) {
     try {
