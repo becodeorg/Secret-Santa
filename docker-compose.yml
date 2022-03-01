@@ -6,7 +6,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./docker/postgres/database.sql:/docker-entrypoint-initdb.d/database.sql
-      - ./postgresql/data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - santa
 
   server:
     build:
@@ -24,6 +26,8 @@ services:
       - ./server/test:/app/test
     ports:
       - "9000:9000"
+    networks:
+      - santa
 
 
   client:
@@ -32,6 +36,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:3000"
+    networks:
+      - santa
 
 
   adminer:
@@ -39,3 +45,12 @@ services:
     restart: always
     ports:
       - 7000:8080
+    networks:
+      - santa
+
+networks:
+  santa:
+    driver: bridge
+
+volumes:
+  pgdata:

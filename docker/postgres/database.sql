@@ -2,9 +2,9 @@
 
 \connect "postgres";
 
-DROP TABLE IF EXISTS "secret-santa";
-DROP SEQUENCE IF EXISTS "secret-santa_id_seq";
-CREATE SEQUENCE "secret-santa_id_seq" INCREMENT  MINVALUE  MAXVALUE  CACHE ;
+-- DROP TABLE IF EXISTS "secret-santa";
+-- DROP SEQUENCE IF EXISTS "secret-santa_id_seq";
+CREATE SEQUENCE "secret-santa_id_seq" INCREMENT 1 MINVALUE 1 MAXVALUE 9999999 CACHE 20;
 
 CREATE TABLE "public"."secret-santa" (
     "id" bigint DEFAULT nextval('"secret-santa_id_seq"') NOT NULL,
