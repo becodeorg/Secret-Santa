@@ -1,7 +1,33 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components'
 import axios from 'axios';
 
+import SecretSanta from '../images/secret-santa.png'
+
+const Header = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 2.5rem;
+  color: #fff;
+
+  img {
+    width: 60%;
+    @media screen and (min-width: 960px) {
+      width: 25%;
+    }
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: .95rem;
+  }
+`
 const Form = styled.form`
   max-width: 300px;
   display: flex;
@@ -89,13 +115,11 @@ const SubmitBtn = styled.button`
     }
   }
 `
-const Result = styled.div`
-`
 
 export const Generator = () => {
   const [name, setName] = useState({ lastname: "", firstname:"" })
   const [receiver, setReceiver] = useState()
-    
+
   useEffect(() => {
       axios.get("http://localhost:9000/api/attendee")
         .then(res => console.log(res.data))
@@ -124,35 +148,46 @@ export const Generator = () => {
 
   return (
     <>
-        <Form>
-          <Control>
-            <input 
-              type="text" 
-              onChange={e => {setName({ ...name, firstname: e.target.value })}}
-              placeholder="First name"
-               />
-            <label className="sr-only" htmlFor="">First name</label>
-          </Control>
+      <Header>
+        <img src={SecretSanta} alt="Secret Santa" />
+         <h1>
+           {!receiver ? "It's time for Secret Santa !" : `You have draw ${receiver.firstname}  ${receiver.lastname}`}
+        </h1> 
 
-          <Control>
-            <input 
-              type="text" 
-              onChange={e => {
-                setName({ ...name, lastname: e.target.value })
-              }}
-              placeholder="Last name"
-            />
-            <label className="sr-only" htmlFor="">Last name</label>
-          </Control>
+        <p>
+          {!receiver ? "Type your name and find out to whom you have to offer a gift": "An email with the person you draw has ben sent to you"}
+        </p> 
+      </Header>
 
-          <SubmitBtn type="submit" onClick={getReceiver}>
-            <span>Draw</span>
-          </SubmitBtn>
-        </Form>
+      {!receiver && 
+        (
+          <Form>
+            <Control>
+              <input 
+                type="text" 
+                onChange={e => {setName({ ...name, firstname: e.target.value })}}
+                placeholder="First name"
+                required
+                />
+              <label className="sr-only" htmlFor="">First name</label>
+            </Control>
 
-        <Result>
-            {receiver && <p>You have draw {receiver.firstname + " " + receiver.lastname}</p>}
-        </Result>
+            <Control>
+              <input 
+                type="text" 
+                onChange={e => {setName({ ...name, lastname: e.target.value })}}
+                placeholder="Last name"
+                required
+              />
+              <label className="sr-only" htmlFor="">Last name</label>
+            </Control>
+
+            <SubmitBtn type="submit" onClick={(e) => getReceiver(e)}>
+              <span>Draw</span>
+            </SubmitBtn>
+          </Form>
+        )
+      }
     </>
   )
 }
