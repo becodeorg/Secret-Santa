@@ -37,9 +37,7 @@ const Form = styled.form`
   align-items: center;
   flex-direction: column;
 
-  @media screen and (min-width: 768px) {
-    margin: 0 auto;
-  }
+  margin: 0 auto;
 `
 const Control = styled.div`
   width: 100%;

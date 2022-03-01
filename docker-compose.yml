@@ -30,8 +30,6 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    volumes:
-      - ./client:/app
     ports:
       - "8080:3000"
 
