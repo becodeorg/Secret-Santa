@@ -1,4 +1,3 @@
-const pool = require('../config/db')
 const { Client } = require('pg')
 
 
@@ -44,10 +43,24 @@ async function getReceiver(req, res) {
     try {
         const client = new Client()
         await client.connect()
-        const data = await client.query(
-            'SELECT * from public."secret-santa" WHERE NOT ("lastname"=($1) AND "firstname"=($2)) AND "hasBeenDraw"=false;', [lastname, firstname],
+        const user = await client.query(
+            'SELECT * from public."secret-santa" WHERE ("lastname"=($1) AND "firstname"=($2));', [lastname, firstname],
         )
-        res.send(data.rows);
+
+        if(user.rows.length === 0) {
+            res.send('Name not found in database')
+        }
+        else {
+            if (user.rows[0].hasDraw === false)  {
+                const data = await client.query(
+                    'SELECT * from public."secret-santa" WHERE NOT ("lastname"=($1) AND "firstname"=($2)) AND "hasBeenDraw"=false;', [lastname, firstname],
+                )
+                res.send(data.rows);
+            }
+            else {
+                res.send("You have already drawn someone")
+            }
+        }
         await client.end()
     }
     catch (err) {
